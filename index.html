@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahi Mehta — Quant & ML</title>
+<meta name="description" content="Mahi Mehta — Computer Engineering student specializing in Financial Engineering. Quantitative finance, machine learning, and risk modeling.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1220;
+  --ink-2:#111C2E;
+  --paper:#F5F7FA;
+  --paper-2:#E7ECF2;
+  --signal:#38E1A0;
+  --signal-dim:#1F9E73;
+  --muted:#8A9BB0;
+  --line:#22314A;
+  --white:#FFFFFF;
+  --display:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--display);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,18,32,.82);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:.02em}
+.logo span{color:var(--signal)}
+.navlinks{display:flex;gap:28px;font-size:14px;font-family:var(--mono)}
+.navlinks a{color:var(--muted);transition:color .2s}
+.navlinks a:hover{color:var(--signal)}
+.menu-btn{display:none;background:none;border:none;color:var(--paper);font-family:var(--mono);font-size:20px;cursor:pointer}
+
+/* HERO */
+header.hero{position:relative;padding:96px 0 80px;overflow:hidden}
+.signal-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+.hero .wrap{position:relative;z-index:2}
+.eyebrow{font-family:var(--mono);font-size:13px;color:var(--signal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--signal)}
+h1{font-size:clamp(38px,7vw,74px);font-weight:700;line-height:1.02;letter-spacing:-.02em;margin-bottom:26px}
+h1 em{font-style:normal;color:var(--signal)}
+.lede{font-size:clamp(17px,2.4vw,21px);color:var(--paper-2);max-width:640px;margin-bottom:36px}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  font-family:var(--mono);font-size:14px;font-weight:500;
+  padding:13px 22px;border-radius:6px;transition:all .2s;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{background:var(--signal);color:var(--ink);font-weight:600}
+.btn-primary:hover{background:var(--white);transform:translateY(-2px)}
+.btn-ghost{border:1px solid var(--line);color:var(--paper)}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal)}
+
+/* SECTION SHELL */
+section{padding:78px 0;border-top:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:44px}
+.sec-num{font-family:var(--mono);font-size:13px;color:var(--signal-dim)}
+.sec-title{font-size:clamp(26px,4vw,36px);font-weight:600;letter-spacing:-.01em}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:48px}
+.about-body p{color:var(--paper-2);margin-bottom:18px;font-size:16.5px}
+.about-body p:last-child{margin-bottom:0}
+.about-body strong{color:var(--paper);font-weight:600}
+.factcard{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:26px;
+  font-family:var(--mono);font-size:14px;height:fit-content;
+}
+.factcard h4{color:var(--signal);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;font-weight:600}
+.fact{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--line);color:var(--muted)}
+.fact:last-child{border-bottom:none}
+.fact b{color:var(--paper);font-weight:500;text-align:right}
+
+/* PROJECTS */
+.proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.proj{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:28px;
+  transition:transform .25s,border-color .25s;position:relative;overflow:hidden;
+}
+.proj:hover{transform:translateY(-4px);border-color:var(--signal-dim)}
+.proj-tag{font-family:var(--mono);font-size:11.5px;color:var(--signal);letter-spacing:.05em;margin-bottom:14px;text-transform:uppercase}
+.proj h3{font-size:21px;font-weight:600;margin-bottom:6px}
+.proj .yr{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:14px}
+.proj p{color:var(--paper-2);font-size:15px;margin-bottom:18px}
+.proj .stack{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px solid var(--line);padding:4px 9px;border-radius:5px}
+
+/* BLOG */
+.post-list{display:flex;flex-direction:column}
+.post{
+  display:grid;grid-template-columns:110px 1fr auto;gap:24px;align-items:center;
+  padding:24px 0;border-bottom:1px solid var(--line);transition:padding .2s;
+}
+.post:first-child{border-top:1px solid var(--line)}
+.post:hover{padding-left:10px}
+.post:hover .post-title{color:var(--signal)}
+.post-date{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.post-title{font-size:19px;font-weight:500;transition:color .2s}
+.post-title .sub{display:block;font-size:14px;color:var(--muted);font-weight:400;margin-top:3px}
+.post-arrow{font-family:var(--mono);color:var(--signal);opacity:0;transition:opacity .2s}
+.post:hover .post-arrow{opacity:1}
+.soon{font-family:var(--mono);font-size:11px;color:var(--signal-dim);border:1px solid var(--signal-dim);padding:3px 8px;border-radius:4px}
+
+/* FOOTER */
+footer{padding:56px 0 40px;border-top:1px solid var(--line);text-align:center}
+.foot-links{display:flex;gap:22px;justify-content:center;font-family:var(--mono);font-size:14px;margin-bottom:20px;flex-wrap:wrap}
+.foot-links a{color:var(--muted);transition:color .2s}
+.foot-links a:hover{color:var(--signal)}
+.foot-note{font-family:var(--mono);font-size:12.5px;color:var(--line)}
+
+@media(max-width:760px){
+  .navlinks{display:none}
+  .navlinks.open{display:flex;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:var(--ink-2);padding:20px 28px;gap:18px;border-bottom:1px solid var(--line)}
+  .menu-btn{display:block}
+  .about-grid{grid-template-columns:1fr;gap:32px}
+  .proj-grid{grid-template-columns:1fr}
+  .post{grid-template-columns:1fr;gap:6px}
+  .post-arrow{display:none}
+  .post-date{order:-1}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#top" class="logo">mahi<span>.</span>mehta</a>
+    <button class="menu-btn" onclick="document.getElementById('nl').classList.toggle('open')">≡</button>
+    <div class="navlinks" id="nl">
+      <a href="#about">about</a>
+      <a href="#projects">projects</a>
+      <a href="#writing">writing</a>
+      <a href="Mahi_Mehta_Resume.pdf" download>resume ↓</a>
+      <a href="https://github.com/mahi250806" target="_blank" rel="noopener">github</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas class="signal-canvas" id="sig"></canvas>
+  <div class="wrap">
+    <div class="eyebrow">Quant · Machine Learning · Risk</div>
+    <h1>I build models that<br>allocate <em>capital</em> and<br>quantify <em>risk</em>.</h1>
+    <p class="lede">Computer Engineering student with honors in Financial Engineering. Currently building a multi-asset risk engine — Hierarchical Risk Parity, Black–Litterman, and ML-driven views — as an Equity Research & ML intern.</p>
+    <div class="cta-row">
+      <a href="#writing" class="btn btn-primary">Read the writing →</a>
+      <a href="Mahi_Mehta_Resume.pdf" download class="btn btn-ghost">Download resume ↓</a>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">About</h2></div>
+    <div class="about-grid">
+      <div class="about-body">
+        <p>I'm a B.Tech Computer Engineering student at D. J. Sanghvi College of Engineering, pursuing honors in <strong>Financial Engineering</strong>. My work sits where quantitative finance meets machine learning — portfolio construction, volatility forecasting, and risk.</p>
+        <p>Right now I'm interning at <strong>Century IQ Solutions</strong>, building a multi-asset risk engine that applies <strong>Hierarchical Risk Parity</strong> and <strong>Black–Litterman</strong> allocation across equities, commodities, and ETFs. I use ML to generate return and volatility views that feed the Black–Litterman posterior, and I'm extending the pipeline with GARCH and LSTM models to forecast volatility dynamics.</p>
+        <p>Outside of allocation, I've built ML systems for fraud detection on highly imbalanced data and full-stack platforms with Django and React. I care about models that are <strong>honest about their limitations</strong> — the assumptions, the failure modes, and what I'd test next.</p>
+      </div>
+      <div class="factcard">
+        <h4>At a glance</h4>
+        <div class="fact"><span>Focus</span><b>Quant / ML Finance</b></div>
+        <div class="fact"><span>Degree</span><b>B.Tech CS + Fin. Eng.</b></div>
+        <div class="fact"><span>CGPA</span><b>9.56 / 10</b></div>
+        <div class="fact"><span>Grad</span><b>May 2028</b></div>
+        <div class="fact"><span>Base</span><b>Mumbai, IN</b></div>
+        <div class="fact"><span>Stack</span><b>Python · sklearn</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Projects</h2></div>
+    <div class="proj-grid">
+      <div class="proj">
+        <div class="proj-tag">Internship · Live</div>
+        <h3>Multi-Asset Risk Engine</h3>
+        <div class="yr">2026 — Century IQ Solutions</div>
+        <p>Portfolio allocation across equities, commodities, and ETFs using Hierarchical Risk Parity and Black–Litterman, with ML-generated return/volatility views enhancing the posterior. Extended with GARCH and LSTM volatility forecasts.</p>
+        <div class="stack"><span class="chip">HRP</span><span class="chip">Black–Litterman</span><span class="chip">GARCH</span><span class="chip">LSTM</span><span class="chip">Python</span></div>
+      </div>
+      <div class="proj">
+        <div class="proj-tag">ML · Fraud Detection</div>
+        <h3>NeuraPay</h3>
+        <div class="yr">2025 — Present</div>
+        <p>Anomaly detection on a 284,807-transaction benchmark with ~0.17% fraud. Isolation Forest for anomaly surfacing, Random Forest for risk classification, and SHAP explainability to show why each transaction was flagged.</p>
+        <div class="stack"><span class="chip">Isolation Forest</span><span class="chip">SHAP</span><span class="chip">Imbalanced ML</span></div>
+      </div>
+      <div class="proj">
+        <div class="proj-tag">Full-Stack</div>
+        <h3>Real Estate Platform</h3>
+        <div class="yr">2024</div>
+        <p>Full-stack platform to browse, list, and manage properties. Django REST APIs on the backend, an interactive React frontend, with search, filtering, and listing management for property discovery.</p>
+        <div class="stack"><span class="chip">Django</span><span class="chip">React</span><span class="chip">REST</span></div>
+      </div>
+      <div class="proj">
+        <div class="proj-tag">Product · Research</div>
+        <h3>HandyBridge</h3>
+        <div class="yr">2025</div>
+        <p>A marketplace concept connecting rural artisans with urban buyers. Analyzed craft supply-chain inefficiencies and designed a platform architecture enabling direct sales and fair pricing.</p>
+        <div class="stack"><span class="chip">Platform Design</span><span class="chip">Market Research</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="writing">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Writing</h2></div>
+    <div class="post-list">
+      <a class="post" href="posts/black-litterman.html">
+        <span class="post-date">Coming soon</span>
+        <span class="post-title">Black–Litterman, by building it
+          <span class="sub">Equilibrium returns, ML views, and the posterior blend — in plain terms.</span>
+        </span>
+        <span class="soon">draft</span>
+      </a>
+      <div class="post" style="cursor:default">
+        <span class="post-date">Planned</span>
+        <span class="post-title">Why I reached for HRP over mean–variance
+          <span class="sub">Estimation error, unstable weights, and a more robust alternative.</span>
+        </span>
+        <span class="post-arrow">→</span>
+      </div>
+      <div class="post" style="cursor:default">
+        <span class="post-date">Planned</span>
+        <span class="post-title">GARCH vs LSTM for volatility forecasting
+          <span class="sub">An honest comparison — does deep learning actually beat econometrics?</span>
+        </span>
+        <span class="post-arrow">→</span>
+      </div>
+      <div class="post" style="cursor:default">
+        <span class="post-date">Planned</span>
+        <span class="post-title">Catching fraud at 0.17%
+          <span class="sub">Why accuracy lies, and how Isolation Forest + SHAP earn their keep.</span>
+        </span>
+        <span class="post-arrow">→</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="mailto:mehta.mahi25@gmail.com">email</a>
+      <a href="https://linkedin.com/in/mahi-mehta-576a091a9" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://github.com/mahi250806" target="_blank" rel="noopener">github</a>
+      <a href="Mahi_Mehta_Resume.pdf" download>resume</a>
+    </div>
+    <div class="foot-note">Built and maintained by Mahi Mehta · Mumbai</div>
+  </div>
+</footer>
+
+<script>
+// Signature: an animated multi-line "signal" series echoing price / volatility paths
+(function(){
+  const c=document.getElementById('sig'),x=c.getContext('2d');
+  let w,h,t=0;
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){w=c.width=c.offsetWidth*devicePixelRatio;h=c.height=c.offsetHeight*devicePixelRatio;}
+  size();window.addEventListener('resize',size);
+  const lines=[
+    {amp:.10,freq:.6,speed:.6,col:'rgba(56,225,160,.55)',lw:1.6,off:0},
+    {amp:.07,freq:1.1,speed:.9,col:'rgba(56,225,160,.22)',lw:1.2,off:2},
+    {amp:.05,freq:1.7,speed:1.3,col:'rgba(138,155,176,.18)',lw:1,off:4}
+  ];
+  function draw(){
+    x.clearRect(0,0,w,h);
+    const base=h*0.62;
+    lines.forEach(L=>{
+      x.beginPath();
+      for(let i=0;i<=w;i+=6){
+        const p=i/w;
+        const noise=Math.sin(p*10*L.freq + t*L.speed + L.off)*Math.cos(p*4+t*.3);
+        const y=base + noise*h*L.amp - p*h*0.18;
+        i===0?x.moveTo(i,y):x.lineTo(i,y);
+      }
+      x.strokeStyle=L.col;x.lineWidth=L.lw*devicePixelRatio;x.stroke();
+    });
+    if(!reduce){t+=0.012;requestAnimationFrame(draw);}
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
