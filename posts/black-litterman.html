@@ -1,1 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black–Litterman, by building it — Mahi Mehta</title>
+<meta name="description" content="A hands-on walk through the Black–Litterman model: equilibrium returns, expressing views, and the posterior blend — explained by building it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1220;--ink-2:#111C2E;--paper:#F5F7FA;--paper-2:#E7ECF2;
+  --signal:#38E1A0;--signal-dim:#1F9E73;--muted:#8A9BB0;--line:#22314A;--white:#fff;
+  --display:'Space Grotesk',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+  --read:'Newsreader',Georgia,serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--display);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+nav{position:sticky;top:0;z-index:50;background:rgba(11,18,32,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{max-width:1080px;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:var(--mono);font-weight:600;font-size:15px}.logo span{color:var(--signal)}
+.back{font-family:var(--mono);font-size:14px;color:var(--muted);transition:color .2s}
+.back:hover{color:var(--signal)}
+
+.post-head{padding:70px 0 34px;border-bottom:1px solid var(--line)}
+.kicker{font-family:var(--mono);font-size:13px;color:var(--signal);letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px}
+h1{font-size:clamp(30px,5.5vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1.08;margin-bottom:20px}
+.meta{font-family:var(--mono);font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+
+article{padding:44px 0 20px;font-family:var(--read);font-size:19px;line-height:1.72;color:var(--paper-2)}
+article h2{font-family:var(--display);font-size:26px;font-weight:600;color:var(--paper);margin:44px 0 16px;letter-spacing:-.01em}
+article h3{font-family:var(--display);font-size:20px;font-weight:600;color:var(--paper);margin:32px 0 12px}
+article p{margin-bottom:22px}
+article strong{color:var(--paper);font-weight:600}
+article em{color:var(--signal);font-style:italic}
+article ul,article ol{margin:0 0 22px 22px}
+article li{margin-bottom:10px}
+article a{color:var(--signal);text-decoration:underline;text-underline-offset:3px}
+blockquote{border-left:2px solid var(--signal-dim);padding:6px 0 6px 22px;margin:26px 0;color:var(--muted);font-style:italic}
+.callout{background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:22px 24px;margin:28px 0;font-family:var(--display);font-size:16px;line-height:1.6}
+.callout b{color:var(--signal);font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px}
+pre{background:#070C15;border:1px solid var(--line);border-radius:10px;padding:20px;overflow-x:auto;margin:26px 0;font-family:var(--mono);font-size:14px;line-height:1.6;color:var(--paper)}
+code{font-family:var(--mono);font-size:.86em;background:var(--ink-2);padding:2px 6px;border-radius:4px;color:var(--signal)}
+pre code{background:none;padding:0;color:inherit}
+.eq{background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:16px 20px;margin:22px 0;font-family:var(--mono);font-size:15px;text-align:center;color:var(--paper);overflow-x:auto}
+
+.post-foot{border-top:1px solid var(--line);padding:34px 0 70px;margin-top:30px}
+.post-foot p{font-family:var(--display);color:var(--muted);font-size:15px;margin-bottom:20px}
+.btn{font-family:var(--mono);font-size:14px;font-weight:500;padding:12px 20px;border-radius:6px;display:inline-block;transition:all .2s}
+.btn-ghost{border:1px solid var(--line);color:var(--paper)}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal)}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a href="../index.html" class="logo">mahi<span>.</span>mehta</a>
+  <a href="../index.html#writing" class="back">← all writing</a>
+</div></nav>
+
+<div class="wrap">
+  <div class="post-head">
+    <div class="kicker">Portfolio Construction</div>
+    <h1>Black–Litterman, by building it</h1>
+    <div class="meta"><span>Draft · 2026</span><span>·</span><span>~12 min read</span></div>
+  </div>
+
+  <article>
+    <p>The first time I read the Black–Litterman paper, I bounced off it. Not because the idea is hard — the idea is actually <em>beautiful</em> — but because it's usually presented as a wall of matrix algebra with no story attached. This post is the version I wish I'd had: what problem it solves, why the math looks the way it does, and how I wired it into the risk engine I'm building during my internship.</p>
+
+    <div class="callout">
+      <b>The one-line version</b>
+      Start from what the market already implies, then nudge those expected returns toward your own views — but only as much as your confidence justifies.
+    </div>
+
+    <h2>The problem it's actually solving</h2>
+    <p>Classical mean–variance optimization has a famous, embarrassing weakness: it's wildly sensitive to the expected returns you feed it. Change one asset's expected return by a fraction of a percent and the "optimal" portfolio can swing from 5% in a name to 60%. Since expected returns are exactly the thing nobody can estimate reliably, this is a serious problem in practice.</p>
+    <p>So you're stuck between two bad options. Estimate returns from historical averages and get noisy, extreme, untradeable portfolios. Or don't express any views at all and give up the entire point of active management.</p>
+    <p>Black–Litterman threads this needle. Instead of asking <em>"what are the expected returns?"</em> from scratch, it asks a smarter question: <strong>what returns would make the current market portfolio optimal — and how should I adjust those if I disagree in specific, bounded ways?</strong></p>
+
+    <h2>Step 1 — Start from equilibrium (reverse optimization)</h2>
+    <p>Here's the clever inversion. Normally you feed expected returns into an optimizer and get weights out. Black–Litterman runs it backwards: it takes the market-cap weights the world already holds and asks what expected returns must be implied if those weights are optimal. These are the <strong>equilibrium (implied) returns</strong>, usually written as Π.</p>
+
+    <div class="eq">Π = λ · Σ · w<sub>mkt</sub></div>
+
+    <p>Reading that in plain terms: the implied excess return of each asset (Π) is its risk contribution — the covariance matrix Σ times market weights w — scaled by the market's risk-aversion λ. Assets that move with everything else, and that everyone already holds a lot of, carry higher implied returns. That's the market saying "you're being paid to hold this risk."</p>
+    <p>This is our <em>prior</em>. If you have no views at all, Black–Litterman just hands you back the market portfolio — which is a very sane default, and already a big improvement over the noisy mess mean–variance gives you.</p>
+
+    <h2>Step 2 — Express your views (this is where I come in)</h2>
+    <p>A view in Black–Litterman is a structured statement. It has three parts: which assets it's about (the <strong>P</strong> matrix), what you expect (the <strong>Q</strong> vector), and how confident you are (the uncertainty <strong>Ω</strong>). Views come in two flavors:</p>
+    <ul>
+      <li><strong>Absolute:</strong> "I expect gold to return 6% over the horizon."</li>
+      <li><strong>Relative:</strong> "I expect tech to outperform energy by 3%." — often more honest, since relative calls are easier to defend than pinpoint absolute numbers.</li>
+    </ul>
+    <p>In the engine I'm building, I don't type these views in by hand — that's the part I find most interesting. I use <strong>machine learning models to generate the views</strong>: return and volatility forecasts across the asset universe become the Q vector, and crucially, the model's own uncertainty maps onto Ω. A confident forecast pulls the posterior harder; a shaky one barely moves it. The Bayesian structure does exactly what you'd want — it listens to the model in proportion to how much the model deserves to be trusted.</p>
+
+    <blockquote>The elegance is that "how much should I trust this signal?" isn't a hack bolted on afterwards. It's the native language of the model.</blockquote>
+
+    <h2>Step 3 — The posterior blend</h2>
+    <p>Now we combine the equilibrium prior with the views. This is the intimidating formula, but every piece has a job:</p>
+
+    <div class="eq">E[R] = [(τΣ)⁻¹ + PᵀΩ⁻¹P]⁻¹ · [(τΣ)⁻¹Π + PᵀΩ⁻¹Q]</div>
+
+    <p>Don't let the transposes scare you. Structurally, it's a <strong>precision-weighted average</strong> — the same thing you'd do to combine two noisy measurements of the same quantity. Each source gets weighted by its precision (inverse variance):</p>
+    <ul>
+      <li>The <strong>prior</strong> Π, weighted by its confidence (τΣ)⁻¹.</li>
+      <li>The <strong>views</strong> Q, weighted by their confidence Ω⁻¹, mapped through P onto the right assets.</li>
+    </ul>
+    <p>Where you have no view, the posterior stays near equilibrium. Where you have a strong, confident view, it moves toward your number. τ is a small scalar controlling how much you trust the prior overall — one of the few genuinely fiddly knobs, and worth a whole post on its own.</p>
+
+    <h3>What comes out the other end</h3>
+    <p>The posterior expected returns E[R] then go into a normal optimizer. But because they started from equilibrium and only moved where you had conviction, the resulting weights are <em>stable and sensible</em> — no more 60%-in-one-name blowups. That single property is why practitioners actually use this in production and not just in papers.</p>
+
+    <h2>A minimal implementation</h2>
+    <p>Stripped to its core, the blend is only a few lines. Here's the skeleton I started from before wiring in the ML view layer:</p>
+
+    <pre><code>import numpy as np
+
+def black_litterman(w_mkt, Sigma, P, Q, Omega, lam=2.5, tau=0.05):
+    # 1. Equilibrium (implied) returns — the prior
+    Pi = lam * Sigma @ w_mkt
+
+    # 2. Posterior expected returns
+    tauSigma_inv = np.linalg.inv(tau * Sigma)
+    Omega_inv    = np.linalg.inv(Omega)
+
+    A = tauSigma_inv + P.T @ Omega_inv @ P
+    b = tauSigma_inv @ Pi + P.T @ Omega_inv @ Q
+    posterior = np.linalg.inv(A) @ b
+    return posterior  # feed into your optimizer</code></pre>
+
+    <p>That's genuinely it. Everything else — building Σ well, generating Q from models, calibrating Ω honestly — is where the real work (and the real edge) lives.</p>
+
+    <h2>What I'd flag honestly</h2>
+    <p>Black–Litterman isn't magic. A few things I've run into:</p>
+    <ul>
+      <li>τ has no universally agreed value, and results are sensitive to it. Be transparent about your choice.</li>
+      <li>Garbage views produce confident garbage. The ML view layer only helps if the forecasts are actually informative — which you have to prove out of sample, not assume.</li>
+      <li>The covariance matrix Σ still has to be estimated, and it's still noisy. Shrinkage estimators help a lot here.</li>
+    </ul>
+    <p>That last point is part of why I pair this with Hierarchical Risk Parity in the broader engine — but that's the next post.</p>
+
+    <div class="callout">
+      <b>Takeaway</b>
+      Black–Litterman is less a formula to memorize than a way of thinking: anchor to what the market already tells you, and spend your conviction budget only where you've earned it.
+    </div>
+  </article>
+
+  <div class="post-foot">
+    <p>Building this as part of a multi-asset risk engine during my internship. Questions, corrections, or want the full notebook? I'd love to hear from you.</p>
+    <a href="../index.html#writing" class="btn btn-ghost">← Back to all writing</a>
+  </div>
+</div>
+</body>
+</html>
 
